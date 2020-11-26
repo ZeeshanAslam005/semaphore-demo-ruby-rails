@@ -12,16 +12,20 @@ global_job_config:
       - sem-version ruby 2.6.0
       - bundle install --deployment -j 4 --path vendor/bundle
 blocks:
-  - name: Setup
+  - name: Bundle
     dependencies: []
     task:
       jobs:
-        - name: bundle
+        - name: install
           commands:
+            - checkout
+            - sem-version ruby 2.6.5
+            - cache restore
+            - bundle install --deployment --path vendor/bundle
             - cache store
   - name: Code scanning
     dependencies:
-      - Setup
+      - Bundle
     task:
       jobs:
         - name: check style + security
